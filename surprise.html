@@ -73,12 +73,14 @@
         let runTimer;
 
         function startRunning() {
-            runTimer = setTimeout(moveButton, 10);
-        }
+    // 雖然你寫 10 毫秒已經很快，但直接呼叫 moveButton 是「真．瞬間」
+    moveButton();
+}
 
-        function stopRunning() {
-            clearTimeout(runTimer);
-        }
+function stopRunning() {
+    // 既然是瞬間移動，其實已經不需要清除計時器了，這行可以留著或刪掉
+    clearTimeout(runTimer);
+}
 
         function moveButton() {
             const btn = document.getElementById('runBtn');
