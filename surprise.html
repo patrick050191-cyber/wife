@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小遊戲時間</title>
+    <style>
+        body {
+            background-color: #fff0f3;
+            font-family: "Microsoft JhengHei", sans-serif;
+            min-height: 100vh; /* 改成最小高度，讓內容多時可以長高 */
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden; /* 防止左右晃動 */
+        }
+        #scary-content {
+            display: none;
+            text-align: center;
+            padding: 40px 20px; /* 增加上下間距 */
+        }
+        #runBtn {
+            position: absolute;
+            padding: 15px 30px;
+            background-color: #ff4d6d;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: left 0.3s ease, top 0.3s ease; 
+        }
+        .scary-photo {
+            max-width: 90%;
+            /* 稍微縮小照片比例，確保手機上看得到底下的字 */
+            max-height: 60vh; 
+            border: 10px solid white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            margin: 20px 0;
+        }
+        .back-link {
+            display: inline-block;
+            color: #ff4d6d;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 2px solid #ff4d6d;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2 id="title-text">點擊按鈕領取🎁</h2>
+
+    <button id="runBtn" onmouseover="startRunning()" onmouseout="stopRunning()" onclick="showScary()">點我領取</button>
+
+    <div id="scary-content">
+        <h1 style="color: #ff0000;">甚麼可愛老婆</h1>
+        <img src="3.jpg" alt="醜照" class="scary-photo">
+        <p style="font-size: 1.5rem; color: #fff;">可愛老婆睡覺</p>
+        <br>
+        <a href="index.html" class="back-link">回主頁面</a>
+    </div>
+
+    <script>
+        let runTimer;
+
+        function startRunning() {
+            runTimer = setTimeout(moveButton, 200);
+        }
+
+        function stopRunning() {
+            clearTimeout(runTimer);
+        }
+
+        function moveButton() {
+            const btn = document.getElementById('runBtn');
+            // 這裡確保按鈕不會跑出視窗外
+            const x = Math.random() * (window.innerWidth - btn.clientWidth);
+            const y = Math.random() * (window.innerHeight - btn.clientHeight);
+            
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+        }
+
+        function showScary() {
+            clearTimeout(runTimer);
+            document.body.style.backgroundColor = "#000";
+            // 當顯示照片時，讓 body 可以滾動，避免字按不到
+            document.body.style.overflowY = "auto"; 
+            document.getElementById('title-text').style.display = "none";
+            document.getElementById('runBtn').style.display = "none";
+            document.getElementById('scary-content').style.display = "block";
+            // 強制捲動到最上方
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>

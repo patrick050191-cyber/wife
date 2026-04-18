@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❤️</title>
+    <style>
+        body {
+            background-color: #fff0f3;
+            font-family: "Microsoft JhengHei", sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            padding: 40px 20px;
+            max-width: 600px;
+            text-align: center;
+            width: 90%;
+        }
+        h1 { color: #ff4d6d; }
+        p { color: #590d22; line-height: 1.6; }
+        
+        /* 計時器樣式 */
+        #timer-box {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.2);
+            margin: 20px 0;
+        }
+        #days-count {
+            font-size: 2.5rem;
+            color: #ff4d6d;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .photo-frame {
+            background: white;
+            padding: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        .photo-frame img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .btn-surprise {
+            background-color: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .btn-surprise:hover {
+            transform: scale(1.05);
+            background-color: #c9184a;
+        }
+
+        /* 遊戲區域樣式 */
+        #quiz-section {
+            display: none; /* 初始隱藏 */
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .question { font-size: 1.3rem; color: #ff4d6d; margin-bottom: 20px; font-weight: bold; }
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background-color: #ffe5ec;
+            border: 2px solid #ffb3c1;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+        .option-btn:hover { background-color: #ffb3c1; color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-content">
+        <h1>給老婆寫網頁</h1>
+        
+        <div id="timer-box">
+            <p>我們在一起已經</p>
+            <div id="days-count">計算中...</div>
+        </div>
+
+        <p>這是我偷研究 HTML 寫出來的<br>希望你會愛我。</p>
+
+        <div class="photo-frame">
+            <img src="1.jpg" alt="婆老婆">
+            <p>婆老婆 ✨</p>
+        </div>
+
+        <p>給我的老婆問問題</p>
+        <button onclick="startQuiz()" class="btn-surprise">點我開始 🎮</button>
+    </div>
+
+    <div class="container" id="quiz-section">
+        <h2 style="color: #ff4d6d;">通靈</h2>
+        <div id="questionNum" style="color: #aaa; font-size: 0.9rem; margin-bottom: 10px;">第 1 題</div>
+        <div class="question" id="questionText">題目載入中...</div>
+        <div id="optionsGroup"></div>
+    </div>
+
+    <script>
+        // 1. 計時器邏輯
+        const startDate = new Date(2022, 1, 27); 
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - startDate;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const daysElement = document.getElementById('days-count');
+            if(daysElement) daysElement.innerText = days + " 天";
+        }
+        updateTimer();
+
+        // 2. 選擇題資料 (你可以自行修改題目)
+        const quizData = [
+            {
+                question: "老婆為什麼可愛?",
+                options: ["因為我說老婆可愛", "因為韓國人說老婆可愛", "老婆其實是佛", "老婆沒有可愛"],
+                answer: 0 
+            },
+            {
+                question: "老婆甚麼時候可愛？",
+                options: ["老婆讀線性代數", "老婆讀電子學", "老婆讀圖演算法", "老婆吃飯 走路 喝飲料 聽八卦 講八卦 畫畫 跳舞 剛睡醒 睡前 坐機車後座 站著不動 躺著不動 過動 生氣 肚子餓 難過 笑 買到想要的 發熱 冷冷 生病 照顧我 跳跳抱 打包"],
+                answer: 3 // 這裡可以隨便設，或是讓她一定要選某個
+            },
+            {
+                question: "老婆想要以下哪個東西，用1500天名義買給你",
+                options: ["charlie&keith錢包", "focus 2nd street的包包", "老婆自訂", "外遇"],
+                answer: 1
+            }
+        ];
+
+        let currentQuiz = 0;
+
+        // 3. 切換畫面到遊戲
+        function startQuiz() {
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+            loadQuiz();
+        }
+
+        // 4. 載入題目
+        function loadQuiz() {
+            const currentData = quizData[currentQuiz];
+            document.getElementById('questionNum').innerText = `第 ${currentQuiz + 1} 題 / 共 ${quizData.length} 題`;
+            document.getElementById('questionText').innerText = currentData.question;
+            
+            const optionsGroup = document.getElementById('optionsGroup');
+            optionsGroup.innerHTML = ""; 
+
+            currentData.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.classList.add('option-btn');
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(index);
+                optionsGroup.appendChild(btn);
+            });
+        }
+
+        // 5. 檢查答案
+        function checkAnswer(selectedIndex) {
+    // 判斷邏輯：
+    // 如果是第 3 題 (currentQuiz 為 2)，只要選 0, 1, 2 其中一個就過
+    // 如果是其他題目，則必須符合 quizData 裡面設定的正確答案
+    const isThirdQuestion = (currentQuiz === 2);
+    const isCorrectSelection = (selectedIndex === 0 || selectedIndex === 1 || selectedIndex === 2);
+
+    if ((isThirdQuestion && isCorrectSelection) || (selectedIndex === quizData[currentQuiz].answer)) {
+        currentQuiz++;
+        if (currentQuiz < quizData.length) {
+            loadQuiz();
+        } else {
+            alert("老婆都有答對非常好非常可愛");
+            window.location.href = "surprise.html"; // 闖關成功跳轉
+        }
+    } else {
+        alert("答錯了重來");
+        currentQuiz = 0; 
+        loadQuiz();
+    }
+}
+    </script>
+</body>
+</html>
